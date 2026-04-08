@@ -59,13 +59,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import Loader from "./Loader.vue";
-import { useFetch } from "../composables/useAuth";
+import Loader from "../Loader.vue";
+import { useFetch } from "../../composables/useAuth";
 import AccountMultipleIcon from "vue-material-design-icons/AccountMultiple.vue";
 import ChevronRightIcon from "vue-material-design-icons/ChevronRight.vue";
 import MinusIcon from "vue-material-design-icons/Minus.vue";
 import OpenInNewIcon from "vue-material-design-icons/OpenInNew.vue";
-import { GroupItem } from "../types";
+import { GroupItem } from "../../types";
 
 const props = withDefaults(
   defineProps<{
