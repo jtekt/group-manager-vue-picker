@@ -2,7 +2,7 @@
   <div style="max-width: 600px; margin: 2rem auto; font-family: sans-serif">
     <h1>vue-group-picker playground</h1>
 
-    <!-- ── Config panel ─────────────────────────────────────────── -->
+    <!-- ── Config panel ───────────────────────────────────── -->
     <section style="margin-bottom: 1.5rem">
       <h2>Configuration</h2>
 
@@ -12,19 +12,19 @@
       </label>
 
       <label style="display: block; margin-top: 0.75rem">
-        Front URL (optional — enables "open in new tab" links)
+        Front URL
         <input v-model="frontUrl" style="width: 100%; margin-top: 0.25rem" />
       </label>
 
       <label style="display: block; margin-top: 0.75rem">
-        Access token (optional)
+        Access token
         <input v-model="accessToken" style="width: 100%; margin-top: 0.25rem" />
       </label>
 
       <div style="display: flex; gap: 1rem; margin-top: 0.75rem">
         <label>
           <input type="checkbox" v-model="usersWithNoGroup" />
-          Show "users with no group"
+          Users with no group
         </label>
         <label>
           <input type="checkbox" v-model="distinguishOfficialGroups" />
@@ -33,7 +33,23 @@
       </div>
     </section>
 
-    <!-- ── Selection result ──────────────────────────────────────── -->
+    <!-- ── Tabs ───────────────────────────────────────────── -->
+    <div style="display: flex; gap: 1rem; margin-bottom: 1rem">
+      <button
+        :style="tabStyle(activeTab === 'group')"
+        @click="activeTab = 'group'"
+      >
+        Group Picker
+      </button>
+      <button
+        :style="tabStyle(activeTab === 'user')"
+        @click="activeTab = 'user'"
+      >
+        User Picker
+      </button>
+    </div>
+
+    <!-- ── Selection result ───────────────────────────────── -->
     <section
       v-if="lastSelection"
       style="margin-bottom: 1rem; padding: 0.5rem; background: #f0f0f0"
@@ -42,11 +58,13 @@
       <code>{{ JSON.stringify(lastSelection) }}</code>
     </section>
 
-    <!-- ── The component under test ─────────────────────────────── -->
-    <GroupPicker
+    <!-- ── Dynamic component ─────────────────────────────── -->
+    <component
+      :is="activeTabComponent"
       style="height: 500px"
       :groupManagerApiUrl="apiUrl"
       :groupManagerFrontUrl="frontUrl || undefined"
+      :userManagerFrontUrl="frontUrl || undefined"
       :accessToken="accessToken || null"
       :selectedGroupId="selectedGroupId"
       :usersWithNoGroup="usersWithNoGroup"
@@ -54,19 +72,19 @@
       @selection="onSelection"
     />
 
-    <!-- ── Edge-case: pre-selected group ────────────────────────── -->
+    <!-- ── Pre-selected group ────────────────────────────── -->
     <section style="margin-top: 1.5rem">
       <h2>Pre-selected group ID</h2>
       <input
         v-model="selectedGroupId"
-        placeholder="Paste a group _id here to pre-select it"
+        placeholder="Paste a group _id"
         style="width: 100%"
       />
     </section>
 
-    <!-- ── Loader component demo ─────────────────────────────────── -->
+    <!-- ── Loader demo ───────────────────────────────────── -->
     <section style="margin-top: 1.5rem">
-      <h2>Loader component</h2>
+      <h2>Loader</h2>
       <div style="display: flex; gap: 1rem; align-items: center">
         <Loader />
         <Loader message="Loading…" />
@@ -78,19 +96,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { GroupPicker, Loader, type GroupItem } from "group_manager_vue_picker";
+import { ref, computed } from "vue";
+import {
+  GroupPicker,
+  Loader,
+  UserPicker,
+  type GroupItem,
+} from "group_manager_vue_picker";
+
+// ── State ───────────────────────────────────────────────
+const activeTab = ref<"group" | "user">("group");
 
 const apiUrl = ref("");
 const frontUrl = ref("");
 const accessToken = ref("");
 const usersWithNoGroup = ref(true);
 const distinguishOfficialGroups = ref(true);
-const selectedGroupId = ref<string | null>(null);
-const lastSelection = ref<GroupItem | null>(null);
 
-function onSelection(group: GroupItem) {
-  lastSelection.value = group;
-  selectedGroupId.value = group._id;
+const selectedGroupId = ref<string | null>(null);
+const lastSelection = ref<any>(null);
+
+// ── Dynamic component switch ────────────────────────────
+const activeTabComponent = computed(() => {
+  return activeTab.value === "group" ? GroupPicker : UserPicker;
+});
+
+// ── Handlers ────────────────────────────────────────────
+function onSelection(payload: any) {
+  lastSelection.value = payload;
+
+  // Only GroupPicker updates selectedGroupId
+  if (payload?._id) {
+    selectedGroupId.value = payload._id;
+  }
+}
+
+// ── Styles ─────────────────────────────────────────────
+function tabStyle(active: boolean) {
+  return {
+    padding: "0.5rem 1rem",
+    cursor: "pointer",
+    border: "1px solid #ccc",
+    background: active ? "#ddd" : "#f5f5f5",
+  };
 }
 </script>

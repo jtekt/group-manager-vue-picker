@@ -84,10 +84,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import Group from "./Group.vue";
-import Loader from "./Loader.vue";
-import { useFetch } from "../composables/useAuth";
+import Loader from "../Loader.vue";
+import { useFetch } from "../../composables/useAuth";
 import AccountMultipleIcon from "vue-material-design-icons/AccountMultiple.vue";
-import { GroupItem } from "../types";
+import { GroupItem } from "../../types";
 
 const props = withDefaults(
   defineProps<{
