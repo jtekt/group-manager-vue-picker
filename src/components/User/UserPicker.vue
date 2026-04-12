@@ -122,7 +122,6 @@ function getUsersOfGroup(group: GroupItem) {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .user_picker {
   display: flex;
@@ -137,7 +136,7 @@ function getUsersOfGroup(group: GroupItem) {
 
   overflow-y: auto;
 
-  border: 1px solid #dddddd;
+  border: 1px solid rgba(128, 128, 128, 0.3);
 }
 
 .picker_container:last-child {
