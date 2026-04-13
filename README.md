@@ -137,13 +137,32 @@ function onUser(user: any) {
 
 ## 🧪 Playground
 
-A playground app is included for testing:
+The project includes a playground app for developing and testing the picker components.
 
-- Configure API URL, token, and options
-- Switch between GroupPicker and UserPicker
-- Inspect selection results
+### ▶️ Run playground in development (live source, no build)
 
----
+This mode uses the local `src/` code directly with HMR.
+
+```bash
+cd playground
+npm install
+npm run dev
+```
+
+### 📦 Test the built package in the playground
+
+This mode lets you verify how the package behaves once built.
+
+```bash
+# In project root
+npm run build
+
+# In playground
+cd playground
+npm install ..
+npm run build
+npm preview
+```
 
 ## 🧱 Included Components
 

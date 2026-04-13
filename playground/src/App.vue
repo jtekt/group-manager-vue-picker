@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 600px; margin: 2rem auto; font-family: sans-serif">
-    <h1>vue-group-picker playground</h1>
+    <h1>group-manager-vue-picker playground</h1>
 
     <!-- ── Config panel ───────────────────────────────────── -->
     <section style="margin-bottom: 1.5rem">
@@ -61,6 +61,7 @@
     <!-- ── Dynamic component ─────────────────────────────── -->
     <component
       :is="activeTabComponent"
+      :key="componentKey"
       style="height: 500px"
       :groupManagerApiUrl="apiUrl"
       :groupManagerFrontUrl="frontUrl || undefined"
@@ -120,6 +121,16 @@ const lastSelection = ref<any>(null);
 const activeTabComponent = computed(() => {
   return activeTab.value === "group" ? GroupPicker : UserPicker;
 });
+
+const componentKey = computed(() =>
+  JSON.stringify({
+    apiUrl: apiUrl.value,
+    frontUrl: frontUrl.value,
+    accessToken: accessToken.value,
+    usersWithNoGroup: usersWithNoGroup.value,
+    distinguishOfficialGroups: distinguishOfficialGroups.value,
+  }),
+);
 
 // ── Handlers ────────────────────────────────────────────
 function onSelection(payload: any) {
